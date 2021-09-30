@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}Welcome!
+        {% endblock %}
+    </title>
+    {# Run `composer require symfony/webpack-encore-bundle`
+				           and uncomment the following Encore helpers to start using Symfony UX #}
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            {# On récupère dynamiquement le nom de la route et l'id de la route, on pourra dès lors passer ces deux paramètres à la vue partials/menu.html.twig #}
+            {{render(controller('App\\Controller\\BarController:mainMenu',{
+                'routeName' : app.request.attributes.get('_route'),
+                'catId': app.request.attributes.get('id') ?? null
+            }))}}
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            Sidebar
+        </div>
+        <div class="col-md-8"> {% block body %}{% endblock %}
+        </div>
+    </div>
+</div>
+</body>
+</html>

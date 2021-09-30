@@ -1,0 +1,27 @@
+// assets/styles/global.scss
+
+// customize some Bootstrap variables
+$primary: darken(#ff0000, 20%);
+$body-bg: #C5FF33;
+$body-color : #C5FF33;
+
+// the ~ allows you to reference things in node_modules
+@import "~bootstrap/scss/bootstrap";
+
+table {
+  table-layout: fixed;
+  width:90%;
+  border-collapse: collapse;
+  border: 3px solid purple;
+  text-align:center;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+thead th {
+  padding: 20px;
+}
+
+th, td {
+  border: 1px solid white;
+}

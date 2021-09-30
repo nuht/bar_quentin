@@ -1,0 +1,37 @@
+{# Affichez les pays cliquables #}
+{% if beer.country %}
+    <ul>
+        <li>
+            Country :
+            <a href="{{ path('show_beer', { id : beer.country.id })}}">
+                {{beer.country.name}}
+            </a>
+        </li>
+    </ul>
+{% endif %}
+{% set normals = normal(beer) %}
+{% set specials = special(beer) %}
+{% if normals %}
+    <ul>
+        <li>
+            Categorie normale :
+            {% for category in normals %}
+        <li>{{category.name}}</li>
+        {% endfor %}
+        </li>
+    </ul>
+{% endif %}
+{% if specials %}
+    <ul>
+        <li>
+            Categorie(s) speciale(s) :
+            {% for category in special(beer) %}
+        <li>{{category.name}}</li>
+        {% endfor %}
+        </li>
+
+        {# Filter personnalisé dans le dossier Twig de src #}
+        <li>Somme exemple de filter{{ [12, 13, 18] | avg }}
+        </li>
+    </ul>
+{% endif %}

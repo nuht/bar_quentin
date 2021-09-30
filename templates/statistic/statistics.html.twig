@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="row">
+        <h1>{{ title}}
+        </h1>
+        <table>
+            <thead>
+            <th>Nom Bière</th>
+            <th>Score moyen</th>
+            </thead>
+            <tbody>
+            {% for beer in beers %}
+                <tr>
+                    {% set sumratings = 0 %}
+                    {% set count = 0 %}
+                    {% for stat in beer.statistics %}
+                        {% if beer.id is same as(stat.beer.id) %}
+                            {% set sumratings = sumratings + stat.score %}
+                            {% set count = count + 1 %}
+                        {% endif %}
+                    {% endfor %}
+                    <td> {{ beer.name }} </td>
+                    {% if count is not same as(0) %}
+                        <td>AVG: {{  (sumratings / count) |round(1, 'floor') }}</td>
+                    {% else %}
+                        <td>AVG: 0</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
