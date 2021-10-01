@@ -12,9 +12,15 @@
                 <div class="card card__beers">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <a href="{{ path('show_beer_byid', { id_beer: beer.id, id_client: app.user.client.id}) }}">
-                                {{ beer.name }}
-                            </a>
+                            {% if app.user %}
+                                <a href="{{ path('show_beer_byid', { id_beer: beer.id, id_client: app.user.client.id}) }}">
+                                    {{ beer.name }}
+                                </a>
+                            {% else %}
+                                <a href="{{ path('show_beer_byid', { id_beer: beer.id}) }}">
+                                    {{ beer.name }}
+                                </a>
+                            {% endif %}
                         </h5>
                         {% if beer.publisheAt is defined %}
                             <p>Date de création :

@@ -65,7 +65,7 @@ class BarController extends AbstractController
 
     /**
      * @Route("/showbeer/{id_beer}/{id_client}", name="show_beer_byid")
-     *
+     * @Route("/showbeer/{id_beer}", name="show_beer_byid")
      * @ParamConverter("beer", options={"mapping": {"id_beer" : "id"}})
      * @ParamConverter("client", options={"mapping": {"id_client"   : "id"}})
      *
@@ -81,16 +81,24 @@ class BarController extends AbstractController
         $form->handleRequest($request);
 
         /*Requête raw sql*/
-        $conn = $em->getConnection();
-        $sql =
-            "SELECT * from statistic
+        if($client!=null) {
+            $conn = $em->getConnection();
+            $sql =
+                "SELECT * from statistic
             LEFT JOIN `user`
             ON statistic.client_id = user.id
-            WHERE statistic.beer_id = ". $beer->getId() ."
-            AND user.id = 2";
+            WHERE statistic.beer_id = :beerId
+            AND user.id = :clientId";
 
-        $stmt = $conn->prepare($sql);
-        $stmt->execute();
+
+            $stmt = $conn->prepare($sql);
+            $beerId = $beer->getId();
+            $clientId = $client->getId();
+            $stmt->bindParam(':beerId', $beerId);
+            $stmt->bindParam(':clientId', $clientId);
+            $stmt->execute();
+            dump($stmt->fetchAll());
+        }
 
         $notVoted = true;
         if($client != null) {
