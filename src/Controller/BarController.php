@@ -72,14 +72,28 @@ class BarController extends AbstractController
      */
     public function showBeerById(Request $request, Beer $beer, Client $client = null): Response
     {
+        $em = $this->getDoctrine()->getManager();
+
         $statistic = new Statistic();
 
         $form = $this->createForm(StatFormType::class, $statistic);
 
         $form->handleRequest($request);
 
+        /*Requête raw sql*/
+        $conn = $em->getConnection();
+        $sql =
+            "SELECT * from statistic
+            LEFT JOIN `user`
+            ON statistic.client_id = user.id
+            WHERE statistic.beer_id = ". $beer->getId() ."
+            AND user.id = 2";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        $notVoted = true;
         if($client != null) {
-            $notVoted = true;
             $statistics = $client->getStatistics();
             foreach($statistics as $statistic) {
                 if($beer->getId() === $statistic->getBeer()->getId()) {
@@ -88,7 +102,7 @@ class BarController extends AbstractController
             }
         }
 
-        if($form->isSubmitted() ) {
+        if($form->isSubmitted() && $notVoted) {
             /**
              * @var Statistic $statisticFilled
              */
@@ -96,15 +110,16 @@ class BarController extends AbstractController
             $statisticFilled->setClient($client);
             $statisticFilled->setBeer($beer);
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($statistic);
+            $em->persist($statisticFilled);
             $em->flush();
         }
+        return $this->render('bar/beer.html.twig', [
+            'beer' => $beer,
+            'title' => 'Show Beer',
+            'notVoted' => $notVoted,
+            'form' => $form->createView()
+        ]);
 
-    return $this->render('bar/beer.html.twig', [
-        'beer' => $beer,
-        'title' => 'Show Beer',
-        'form' => $form->createView()
-    ]);
+
     }
 }

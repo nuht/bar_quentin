@@ -31,8 +31,10 @@
                             <div>
                                 <img class="card-img-top" src="{{ asset('build/images/beer-2695358_1280.jpeg') }}"/>
                             </div>
-                            {% if is_granted('ROLE_VISITEUR') %}
-                                {{ form(form) }}
+                            {% if is_granted('ROLE_VISITEUR')%}
+                                {% if notVoted %}
+                                    {{ form(form) }}
+                                {% endif %}
                             {% endif %}
                             {% include 'partials/meta.html.twig' %}
                         </div>
